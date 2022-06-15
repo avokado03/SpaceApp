@@ -12,7 +12,7 @@ namespace SpaceApp.ML.Utils
         public static string GetTestDataPath() => 
             Path.Combine(Assembly.GetExecutingAssembly().Location, "Data", "test.csv");
 
-        public static string GetModel() => 
+        public static string GetModelPath() => 
             Path.Combine(Assembly.GetExecutingAssembly().Location, "Models", "model.zip");
     }
 }

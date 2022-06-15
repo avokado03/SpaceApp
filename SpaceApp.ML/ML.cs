@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
-using Microsoft.ML.Transforms.Text;
 using SpaceApp.ML.ViewModels;
 using SpaceApp.ML.ViewModels.Mappings;
 
@@ -67,7 +61,7 @@ namespace SpaceApp.ML
             return prediction;
         }
 
-        private MetricsViewModel Evaluate(DataViewSchema schema)
+        public MetricsViewModel Evaluate(DataViewSchema schema)
         {
             var testDataPath = Utils.DataPathes.GetTestDataPath();
             var testDataView = _mlContext.Data.LoadFromTextFile<StellarData>(testDataPath, hasHeader: true);
@@ -75,7 +69,19 @@ namespace SpaceApp.ML
             return new MetricsMapper().Map(testMetrics);
         }
 
+        public IssuePrediction PredictIssue(StellarData stellarData)
+        {
+            ITransformer loadedModel = _mlContext.Model
+                .Load(Utils.DataPathes.GetModelPath(), out var modelInputSchema);
+            _predEngine = _mlContext.Model.CreatePredictionEngine<StellarData, IssuePrediction>(loadedModel);
+            return Predict(stellarData);
+        }
 
+        public void ModelToFile(DataViewSchema schema, ITransformer model)
+        {
+            var modelPath = Utils.DataPathes.GetModelPath();
+            _mlContext.Model.Save(model, schema, modelPath);
+        }
 
     }
 }
