@@ -8,6 +8,8 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms;
 using Microsoft.ML.Transforms.Text;
+using SpaceApp.ML.ViewModels;
+using SpaceApp.ML.ViewModels.Mappings;
 
 namespace SpaceApp.ML
 {
@@ -30,11 +32,12 @@ namespace SpaceApp.ML
         {
             var preparedPipeline = PrepareData();
             var trainingPipeline = TrainModel(_trainingDataView, preparedPipeline);
+            Evaluate(_trainingDataView.Schema);
         }
 
         private IEstimator<ITransformer> PrepareData()
         {
-            var pipeline = _mlContext.Transforms.Conversion.MapValueToKey("Class", "Label");
+            var pipeline = _mlContext.Transforms.Conversion.MapValueToKey("s_class", "Label");
             var dataProps = typeof(StellarData).GetProperties()
                 .Where(prop => !Attribute.IsDefined(prop,typeof(NoColumnAttribute))).ToArray();
             string[] outputColumnsNames = new string[dataProps.Length];
@@ -58,11 +61,21 @@ namespace SpaceApp.ML
             return traningPipeline;
         }
 
-        private IssuePrediction Predict(StellarData stellarData)
+        public IssuePrediction Predict(StellarData stellarData)
         {
             var prediction = _predEngine.Predict(stellarData);
             return prediction;
         }
+
+        private MetricsViewModel Evaluate(DataViewSchema schema)
+        {
+            var testDataPath = Utils.DataPathes.GetTestDataPath();
+            var testDataView = _mlContext.Data.LoadFromTextFile<StellarData>(testDataPath, hasHeader: true);
+            var testMetrics = _mlContext.MulticlassClassification.Evaluate(_trainedModel.Transform(testDataView));
+            return new MetricsMapper().Map(testMetrics);
+        }
+
+
 
     }
 }
