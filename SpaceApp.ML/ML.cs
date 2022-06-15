@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Transforms;
+using Microsoft.ML.Transforms.Text;
 
 namespace SpaceApp.ML
 {
@@ -30,10 +34,17 @@ namespace SpaceApp.ML
 
         private IEstimator<ITransformer> PrepareData()
         {
-            var pipeline = _mlContext.Transforms.Conversion.MapValueToKey("Area", "Label");
-            pipeline.Append(_mlContext.Transforms.Text.FeaturizeText(inputColumnName: "Title", outputColumnName: "TitleFeaturized"))
-                    .Append(_mlContext.Transforms.Text.FeaturizeText(inputColumnName: "Description", outputColumnName: "DescriptionFeaturized"))
-                    .Append(_mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"));
+            var pipeline = _mlContext.Transforms.Conversion.MapValueToKey("Class", "Label");
+            var dataProps = typeof(StellarData).GetProperties()
+                .Where(prop => !Attribute.IsDefined(prop,typeof(NoColumnAttribute))).ToArray();
+            string[] outputColumnsNames = new string[dataProps.Length];
+            foreach (var prop in dataProps)
+            {
+                TextEstimateBuilder model = new TextEstimateBuilder(prop.Name);
+                pipeline.Append(model.GetTextEstimator(_mlContext));
+                outputColumnsNames.Append(model.OutputColumnName);
+            }
+            pipeline.Append(_mlContext.Transforms.Concatenate("Features",outputColumnsNames));
             pipeline.AppendCacheCheckpoint(_mlContext);
             return pipeline;
         }
@@ -52,7 +63,6 @@ namespace SpaceApp.ML
             var prediction = _predEngine.Predict(stellarData);
             return prediction;
         }
-
 
     }
 }

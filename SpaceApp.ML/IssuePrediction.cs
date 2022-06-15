@@ -5,6 +5,6 @@ namespace SpaceApp.ML
     public class IssuePrediction
     {
         [ColumnName("PredictedLabel")]
-        public string Area;
+        public string Class;
     }
 }

@@ -6,6 +6,7 @@ namespace SpaceApp.ML
     {
         // ID объекта в каталоге изображений CAS
         [LoadColumn(0)]
+        [NoColumn]
         public string obj_ID { get; set; }
 
         // Угол прямого восхождения
@@ -38,10 +39,12 @@ namespace SpaceApp.ML
 
         // Номер запуска, идентифицирующий конкретное сканирование
         [LoadColumn(8)]
+        [NoColumn]
         public string run_ID { get; set; }
 
         // Номер повторного запуска
         [LoadColumn(9)]
+        [NoColumn]
         public string rerun_ID { get; set; }
 
         // Столбец камеры
@@ -50,10 +53,12 @@ namespace SpaceApp.ML
 
         // Идентификатор поля
         [LoadColumn(11)]
+        [NoColumn]
         public string field_ID { get; set; }
 
         // Уникальный идентификатор для оптических спектроскопических объектов
         [LoadColumn(12)]
+        [NoColumn]
         public string spec_obj_ID { get; set; }
 
         // Класс объекта (галактика/звезда/квазар)
