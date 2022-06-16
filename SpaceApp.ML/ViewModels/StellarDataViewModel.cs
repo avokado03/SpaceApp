@@ -1,44 +1,44 @@
 ﻿namespace SpaceApp.ML.ViewModels
 {
+    /// <summary>
+    /// Модель данных небесного тела
+    /// </summary>
     public class StellarDataViewModel
     {
         // Угол прямого восхождения
-        public string alpha { get; set; }
+        public float alpha { get; set; }
 
         // Угол склонения
-        public string delta { get; set; }
+        public float delta { get; set; }
 
         // УФ-фильтр в фотометрической системе
-        public string u { get; set; }
+        public float u { get; set; }
 
         // Зеленый в фотометрической системе
-        public string g { get; set; }
+        public float g { get; set; }
 
         // Красный в фотометрической системе
-        public string r { get; set; }
+        public float r { get; set; }
 
         // Фильтр ближнего ИК-излучения в фотометрической системе
-        public string i { get; set; }
+        public float i { get; set; }
 
         // ИК-фильтр в фотометрической системе
-        public string z { get; set; }
+        public float z { get; set; }
 
         // Столбец камеры
-        public string cam_col { get; set; }
-
-        // Класс объекта (галактика/звезда/квазар)
-        public string s_class { get; set; }
+        public float cam_col { get; set; }
 
         // Значение красного смещения
-        public string redshift { get; set; }
+        public float redshift { get; set; }
 
         // Идентификатор пластины спектрометра в SDSS
-        public string plate { get; set; }
+        public float plate { get; set; }
 
         // Модифицированная дата по юлианскому календарю
-        public string MJD { get; set; }
+        public float MJD { get; set; }
 
         // Идентификатор волокна, направляющего свет в фокальную плоскость
-        public string fiber_ID { get; set; }
+        public float fiber_ID { get; set; }
     }
 }

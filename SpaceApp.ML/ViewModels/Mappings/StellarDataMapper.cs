@@ -1,7 +1,11 @@
-﻿namespace SpaceApp.ML.ViewModels.Mappings
+﻿using SpaceApp.ML.MLData;
+
+namespace SpaceApp.ML.ViewModels.Mappings
 {
+    /// <inheritdoc cref="IMapper{Input, Output}"/>
     public class StellarDataMapper : IMapper<StellarData, StellarDataViewModel>
     {
+        /// <inheritdoc cref="IMapper{Input, Output}.Map(Input)"
         public StellarDataViewModel Map(StellarData input)
         {
             var vm = new StellarDataViewModel()
@@ -14,7 +18,6 @@
                 i = input.i,
                 z = input.z,
                 cam_col = input.cam_col,
-                s_class = input.s_class,
                 redshift = input.redshift,
                 plate = input.plate,
                 MJD = input.MJD,
