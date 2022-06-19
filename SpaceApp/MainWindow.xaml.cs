@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Reflection;
+using SpaceApp.ML.ViewModels;
+using SpaceApp.Validation;
 
 namespace SpaceApp
 {
@@ -21,11 +23,17 @@ namespace SpaceApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private StellarDataValidator _stellarDataValidator;
         public MainWindow()
         {           
             ClearConsoleCmd = new RoutedCommand("ClearConsoleCmd", typeof(Button));          
             ClearStellarFormCmd = new RoutedCommand("ClearStellarFormCmd", typeof(Button));
+            _stellarDataValidator = new StellarDataValidator();
+            
+            DataContext = _stellarDataValidator;
+            
             InitializeComponent();
+            _stellarDataValidator.FirstLoad = false;
         }
 
         #region Oчистка бокса с результатами
@@ -47,6 +55,12 @@ namespace SpaceApp
         private void ButtonCanExecute (object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = e.Source is Button;
+        }
+
+        private void TextBox_Error(object sender, ValidationErrorEventArgs e)
+        {
+            var errorEventMsg = e.Error.ErrorContent.ToString() + "\n\r";
+            OutputTxt.Text += errorEventMsg;
         }
     }
 }

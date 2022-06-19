@@ -10,4 +10,8 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SpaceApp.ML\SpaceApp.ML.csproj" />
+  </ItemGroup>
+
 </Project>
