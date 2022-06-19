@@ -8,11 +8,11 @@ namespace SpaceApp.ML.Services
     /// <summary>
     /// Сервис прогнозов
     /// </summary>
-    public class PredictionService
+    public class PredictionService : ServiceBase
     {
         private FileService _fileService;
 
-        public PredictionService(FileService fileService)
+        public PredictionService(FileService fileService, MLContext mLContext) : base(mLContext)
         {
             _fileService = fileService;
         }
@@ -20,9 +20,9 @@ namespace SpaceApp.ML.Services
         /// <summary>
         /// Создает механизм прогнозирования для модели
         /// </summary>
-        public PredictionEngine<StellarData, IssuePrediction> GetPredictionEngine(MLContext mlContext, ITransformer trainedModel)
+        public PredictionEngine<StellarData, IssuePrediction> GetPredictionEngine(ITransformer trainedModel)
         {
-            return mlContext.Model.CreatePredictionEngine<StellarData, IssuePrediction>(trainedModel);
+            return Context.Model.CreatePredictionEngine<StellarData, IssuePrediction>(trainedModel);
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace SpaceApp.ML.Services
         /// <summary>
         /// Прогноз на основе модели из файла
         /// </summary>
-        public IssuePrediction PredictIssue(MLContext mlContext, StellarDataViewModel stellarModel, PredictionEngine<StellarData, IssuePrediction> predEngine)
+        public IssuePrediction PredictIssue(StellarDataViewModel stellarModel, PredictionEngine<StellarData, IssuePrediction> predEngine)
         {
-            ITransformer loadedModel = _fileService.LoadModelFromFile(mlContext);
+            ITransformer loadedModel = _fileService.LoadModelFromFile();
             return Predict(predEngine,stellarModel);
         }
     }

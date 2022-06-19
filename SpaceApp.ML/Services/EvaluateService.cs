@@ -9,16 +9,20 @@ namespace SpaceApp.ML.Services
     /// <summary>
     /// Сервис метрик и статистики
     /// </summary>
-    public class EvaluateService
+    public class EvaluateService : ServiceBase
     {
+        public EvaluateService(MLContext mLContext) : base(mLContext)
+        {
+        }
+
         /// <summary>
         /// Сбор метрик по модели
         /// </summary>
-        public MetricsViewModel Evaluate(MLContext mlContext, ITransformer trainedModel, DataViewSchema schema)
+        public MetricsViewModel Evaluate(ITransformer trainedModel, DataViewSchema schema)
         {
             var testDataPath = DataPathes.GetTestDataPath();
-            var testDataView = mlContext.Data.LoadFromTextFile<StellarData>(testDataPath, hasHeader: true);
-            var testMetrics = mlContext.MulticlassClassification.Evaluate(trainedModel.Transform(testDataView));
+            var testDataView = Context.Data.LoadFromTextFile<StellarData>(testDataPath, hasHeader: true);
+            var testMetrics = Context.MulticlassClassification.Evaluate(trainedModel.Transform(testDataView));
             return new MetricsMapper().Map(testMetrics);
         }
     }

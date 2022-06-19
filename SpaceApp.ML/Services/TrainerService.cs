@@ -10,25 +10,29 @@ namespace SpaceApp.ML.Services
     /// <summary>
     /// Сервис для обучения модели
     /// </summary>
-    public class TranerService
+    public class TrainerService : ServiceBase
     {
+        public TrainerService(MLContext mLContext) : base(mLContext)
+        {
+        }
+
         /// <summary>
         /// Подготовка данных
         /// </summary>
-        private IEstimator<ITransformer> PrepareData(MLContext mlContext)
+        private IEstimator<ITransformer> PrepareData()
         {
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(Constants.PREDICT_COLUMN_NAME, Constants.PREDICT_LABEL);
+            var pipeline = Context.Transforms.Conversion.MapValueToKey(Constants.PREDICT_COLUMN_NAME, Constants.PREDICT_LABEL);
             var dataProps = typeof(StellarData).GetProperties()
                 .Where(prop => !Attribute.IsDefined(prop, typeof(NoColumnAttribute))).ToArray();
             string[] outputColumnsNames = new string[dataProps.Length];
             foreach (var prop in dataProps)
             {
                 EncodingEstimateBuilder model = new EncodingEstimateBuilder(prop.Name);
-                pipeline.Append(model.GetTextEstimator(mlContext));
+                pipeline.Append(model.GetTextEstimator(Context));
                 outputColumnsNames.Append(model.OutputColumnName);
             }
-            pipeline.Append(mlContext.Transforms.Concatenate(Constants.FEATURE_COLUMN_NAME, outputColumnsNames));
-            pipeline.AppendCacheCheckpoint(mlContext);
+            pipeline.Append(Context.Transforms.Concatenate(Constants.FEATURE_COLUMN_NAME, outputColumnsNames));
+            pipeline.AppendCacheCheckpoint(Context);
             return pipeline;
         }
 
@@ -36,20 +40,20 @@ namespace SpaceApp.ML.Services
         /// Назначение алгоритма обучения
         /// </summary>
         /// <param name="mlContext">Контекст выполнения</param>
-        private IEstimator<ITransformer> GetTraningPipeline(MLContext mlContext)
+        private IEstimator<ITransformer> GetTraningPipeline()
         {
-            var preparedPipeline = PrepareData(mlContext);
-            var traningPipeline = preparedPipeline.Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(Constants.PREDICT_LABEL, Constants.FEATURE_COLUMN_NAME))
-                                                  .Append(mlContext.Transforms.Conversion.MapValueToKey(Constants.PREDICT_LABEL_NAME));           
+            var preparedPipeline = PrepareData();
+            var traningPipeline = preparedPipeline.Append(Context.MulticlassClassification.Trainers.SdcaMaximumEntropy(Constants.PREDICT_LABEL, Constants.FEATURE_COLUMN_NAME))
+                                                  .Append(Context.Transforms.Conversion.MapValueToKey(Constants.PREDICT_LABEL_NAME));           
             return traningPipeline;
         }
 
         /// <summary>
         /// Тренирует модель
         /// </summary>
-        public ITransformer Train(MLContext context, IDataView dataView)
+        public ITransformer Train(IDataView dataView)
         {
-            var pipeline = GetTraningPipeline(context);
+            var pipeline = GetTraningPipeline();
             return pipeline.Fit(dataView);
         }
 

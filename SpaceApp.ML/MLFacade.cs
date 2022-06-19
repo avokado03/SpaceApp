@@ -16,7 +16,7 @@ namespace SpaceApp.ML
         private ITransformer _trainedModel;
         private IDataView _trainingDataView;
 
-        private TranerService _tranerService;
+        private TrainerService _tranerService;
         private FileService _fileService;
         private PredictionService _predicionService;
         private EvaluateService _evaluateService;
@@ -25,10 +25,10 @@ namespace SpaceApp.ML
         public MLFacade()
         {
             _mlContext = new MLContext(0);
-            _tranerService = new TranerService();
-            _fileService = new FileService();
-            _predicionService = new PredictionService(_fileService);
-            _evaluateService = new EvaluateService();
+            _tranerService = new TrainerService(_mlContext);
+            _fileService = new FileService(_mlContext);
+            _predicionService = new PredictionService(_fileService, _mlContext);
+            _evaluateService = new EvaluateService(_mlContext);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace SpaceApp.ML
         {
             try
             {
-                var trained = _tranerService.Train(_mlContext, _trainingDataView);
+                var trained = _tranerService.Train(_trainingDataView);
                 _trainedModel = trained;
             }
             catch(Exception ex)
@@ -55,7 +55,7 @@ namespace SpaceApp.ML
             string predict = string.Empty;
             try
             {
-                _predEngine = _predicionService.GetPredictionEngine(_mlContext, _trainedModel);
+                _predEngine = _predicionService.GetPredictionEngine(_trainedModel);
                 var issue = _predicionService.Predict(_predEngine, viewModel);
                 predict = issue.Class;
             }
@@ -76,7 +76,7 @@ namespace SpaceApp.ML
             MetricsViewModel metrics = new MetricsViewModel();
             try
             {
-                var model = _evaluateService.Evaluate(_mlContext, _trainedModel, _trainingDataView.Schema);
+                var model = _evaluateService.Evaluate(_trainedModel, _trainingDataView.Schema);
                 metrics = model;
             }
             catch (Exception ex)
@@ -86,6 +86,20 @@ namespace SpaceApp.ML
             return metrics;
         }
 
-        //TODO: добавить сюда методы для загрузки и сохранения файлов
+        /// <summary>
+        /// Сохранение модели в файл
+        /// </summary>
+        public void SaveTrainedModel()
+        {
+            _fileService.ModelToFile(_trainingDataView.Schema, _trainedModel);
+        }
+
+        /// <summary>
+        /// Загрузка модели из файла
+        /// </summary>
+        public void LoadModelFromFile()
+        {
+            _fileService.LoadModelFromFile();
+        }
     }
 }

@@ -7,33 +7,37 @@ namespace SpaceApp.ML.Services
     /// <summary>
     /// Сервис для работы с файлами
     /// </summary>
-    public class FileService
+    public class FileService : ServiceBase
     {
+        public FileService(MLContext mLContext) : base(mLContext)
+        {
+        }
+
         /// <summary>
         /// Загрузка модели из файла
         /// </summary>
-        public ITransformer LoadModelFromFile(MLContext mlContext) {
-            ITransformer loadedModel = mlContext.Model
-                .Load(Utils.DataPathes.GetModelPath(), out var modelInputSchema);
+        public ITransformer LoadModelFromFile() {
+            ITransformer loadedModel = Context.Model
+                .Load(DataPathes.GetModelPath(), out var modelInputSchema);
             return loadedModel;
         }
 
         /// <summary>
         /// Загрузка обучающего набора из файла
         /// </summary>
-        public IDataView LoadDataFromFile(MLContext mlContext)
+        public IDataView LoadDataFromFile()
         {
-            return mlContext.Data.LoadFromTextFile<StellarData>(
+            return Context.Data.LoadFromTextFile<StellarData>(
                 DataPathes.GetDataPath(), hasHeader: true, separatorChar: Constants.CSV_SEPARATOR);
         }
 
         /// <summary>
         /// Сохранить модель в .zip
         /// </summary>
-        public void ModelToFile(MLContext mlContext, DataViewSchema schema, ITransformer model)
+        public void ModelToFile(DataViewSchema schema, ITransformer model)
         {
             var modelPath = DataPathes.GetModelPath();
-            mlContext.Model.Save(model, schema, modelPath);
+            Context.Model.Save(model, schema, modelPath);
         }
     }
 }
