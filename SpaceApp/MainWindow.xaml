@@ -51,10 +51,68 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button x:Name="LearnBtn" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5px" Background="{StaticResource PrimaryHueLightBrush}" Foreground="Black">Обучить модель</Button>
-            <Button x:Name="LoadBtn" Grid.Row="1" Grid.Column="0" Margin="5px" Background="{StaticResource SecondaryHueMidBrush}" Foreground="Black">Загрузить модель из файла</Button>
-            <Button x:Name="SaveBtn" Grid.Row="1" Grid.Column="1" Margin="5px" Background="{StaticResource SecondaryHueMidBrush}" Foreground="Black">Сохранить модель в файл</Button>
-            <Button x:Name="EvaluateBtn" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" Background="{StaticResource PrimaryHueLightBrush}" Foreground="Black">Собрать метрики</Button>
+            <Button x:Name="LearnBtn" 
+                    Grid.Row="0" 
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="2" 
+                    Margin="5px" 
+                    Background="{StaticResource PrimaryHueLightBrush}" 
+                    Foreground="Black"
+                    Command="{x:Static local:MainWindow.TrainModelCmd}">
+                Обучить модель
+                <Button.CommandBindings>
+                    <CommandBinding 
+                        Command="{x:Static local:MainWindow.TrainModelCmd}"
+                        Executed="TrainModelCmdExecuted"
+                        CanExecute="ButtonCanExecute"></CommandBinding>
+                </Button.CommandBindings>
+            </Button>
+            <Button x:Name="LoadBtn" 
+                    Grid.Row="1"
+                    Grid.Column="0" 
+                    Margin="5px" 
+                    Background="{StaticResource SecondaryHueMidBrush}" 
+                    Foreground="Black"
+                    Command="{x:Static local:MainWindow.LoadModelCmd}">
+                Загрузить модель из файла
+                <Button.CommandBindings>
+                    <CommandBinding 
+                        Command="{x:Static local:MainWindow.LoadModelCmd}"
+                        Executed="LoadModelCmdExecuted"
+                        CanExecute="ButtonCanExecute"></CommandBinding>
+                </Button.CommandBindings>
+            </Button>
+            <Button x:Name="SaveBtn" 
+                    Grid.Row="1" 
+                    Grid.Column="1"
+                    Margin="5px" 
+                    Background="{StaticResource SecondaryHueMidBrush}" 
+                    Foreground="Black"
+                    Command="{x:Static local:MainWindow.SaveModelCmd}">
+                Сохранить модель в файл
+                <Button.CommandBindings>
+                    <CommandBinding 
+                        Command="{x:Static local:MainWindow.SaveModelCmd}"
+                        Executed="SaveModelCmdExecuted"
+                        CanExecute="ButtonCanExecute"></CommandBinding>
+                </Button.CommandBindings>
+            </Button>
+            <Button x:Name="EvaluateBtn" 
+                    Grid.Row="2" 
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="2" 
+                    Margin="5"
+                    Background="{StaticResource PrimaryHueLightBrush}" 
+                    Foreground="Black"
+                    Command="{x:Static local:MainWindow.EvaluateCmd}">
+                Собрать метрики
+                <Button.CommandBindings>
+                    <CommandBinding 
+                        Command="{x:Static local:MainWindow.EvaluateCmd}"
+                        Executed="EvaluateCmdExecuted"
+                        CanExecute="ButtonCanExecute"></CommandBinding>
+                </Button.CommandBindings>
+            </Button>
         </Grid>
         <Grid x:Name="OutputGrid" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5">
             <Grid.RowDefinitions>
@@ -257,7 +315,16 @@
                     Grid.Column="0" 
                     Margin="5px" 
                     Background="{StaticResource PrimaryHueLightBrush}" 
-                    Foreground="Black">Одиночное предсказание</Button>
+                    Foreground="Black"
+                    Command="{x:Static local:MainWindow.PredictCmd}">
+                Одиночное предсказание
+                <Button.CommandBindings>
+                    <CommandBinding 
+                        Command="{x:Static local:MainWindow.PredictCmd}"
+                        Executed="PredictCmdExecuted"
+                        CanExecute="ButtonCanExecute"></CommandBinding>
+                </Button.CommandBindings>
+            </Button>
             <Button x:Name="ClearFormBtn" 
                     Grid.Row="13"
                     Grid.Column="1" 

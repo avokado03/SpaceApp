@@ -24,14 +24,19 @@ namespace SpaceApp
     public partial class MainWindow : Window
     {
         private StellarDataValidator _stellarDataValidator;
+        private ML.MLFacade _ml;
         public MainWindow()
         {           
             ClearConsoleCmd = new RoutedCommand("ClearConsoleCmd", typeof(Button));          
             ClearStellarFormCmd = new RoutedCommand("ClearStellarFormCmd", typeof(Button));
-            _stellarDataValidator = new StellarDataValidator();
-            
+            TrainModelCmd = new RoutedCommand("TrainModelCmd", typeof(Button));
+            LoadModelCmd = new RoutedCommand("LoadModelCmd", typeof(Button));
+            SaveModelCmd = new RoutedCommand("SaveModelCmd", typeof(Button));
+            EvaluateCmd = new RoutedCommand("EvaluateCmd", typeof(Button));
+            PredictCmd = new RoutedCommand("PredictCmd", typeof(Button));
+            _stellarDataValidator = new StellarDataValidator();           
             DataContext = _stellarDataValidator;
-            
+            _ml = new ML.MLFacade();
             InitializeComponent();
             _stellarDataValidator.FirstLoad = false;
         }
@@ -52,6 +57,49 @@ namespace SpaceApp
         }
         #endregion
 
+        #region Обучить
+        public static RoutedCommand TrainModelCmd;
+        private void TrainModelCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            RunMLAction(_ml.Train);
+        }
+
+        #endregion
+
+        #region Загрузить
+        public static RoutedCommand LoadModelCmd;
+        private void LoadModelCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            RunMLAction(_ml.LoadModelFromFile);
+        }
+        #endregion
+
+        #region Сохранить
+        public static RoutedCommand SaveModelCmd;
+        private void SaveModelCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            RunMLAction(_ml.SaveTrainedModel);
+        }
+        #endregion
+
+        #region Метрики
+        public static RoutedCommand EvaluateCmd;
+        private void EvaluateCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            var result = _ml.Evaluate();
+            string m = string.Format("{0} - {1} - {2} - {3} \n\r", result.MicroAccuracy, result.MacroAccuracy, result.LogLoss, result.LogLossReduction);
+        }
+        #endregion
+
+        #region Одиночное предсказание
+        public static RoutedCommand PredictCmd;
+        private void PredictCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            var result = _ml.Predict(_stellarDataValidator);
+            string m = string.Format("Class - {0} \n\r", result);
+        }
+        #endregion
+
         private void ButtonCanExecute (object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = e.Source is Button;
@@ -61,6 +109,18 @@ namespace SpaceApp
         {
             var errorEventMsg = e.Error.ErrorContent.ToString() + "\n\r";
             OutputTxt.Text += errorEventMsg;
+        }
+
+        private void RunMLAction(Action action)
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch(Exception ex)
+            {
+                OutputTxt.Text += ex.Message;
+            }
         }
     }
 }

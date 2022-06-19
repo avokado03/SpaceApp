@@ -3,7 +3,7 @@
     /// <summary>
     /// Контракт для маппингов
     /// </summary>
-    public interface IMapper<Input, Output> where Input: class
+    public interface IMapper<in Input,  Output> where Input: class
                                             where Output: class
     {
         /// <summary>
