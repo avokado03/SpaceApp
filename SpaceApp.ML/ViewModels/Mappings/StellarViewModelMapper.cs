@@ -1,4 +1,5 @@
 ﻿using SpaceApp.ML.MLData;
+using SpaceApp.ML.Utils;
 
 namespace SpaceApp.ML.ViewModels.Mappings
 {
@@ -10,18 +11,18 @@ namespace SpaceApp.ML.ViewModels.Mappings
         {
             var ml = new StellarData()
             {
-                alpha = input.alpha,
-                delta = input.delta,
+                alpha = Constants.DEFAULT_FLOAT,
+                delta = Constants.DEFAULT_FLOAT,
                 u = input.u,
                 g = input.g,
                 r = input.r,
                 i = input.i,
                 z = input.z,
-                cam_col = input.cam_col,
+                cam_col = Constants.DEFAULT_FLOAT,
                 redshift = input.redshift,
-                plate = input.plate,
-                MJD = input.MJD,
-                fiber_ID = input.fiber_ID,
+                plate = Constants.DEFAULT_FLOAT,
+                MJD = Constants.DEFAULT_FLOAT,
+                fiber_ID = Constants.DEFAULT_FLOAT,
                 obj_ID = string.Empty,
                 run_ID = string.Empty,
                 rerun_ID = string.Empty,

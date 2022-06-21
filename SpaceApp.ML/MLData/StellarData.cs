@@ -15,10 +15,12 @@ namespace SpaceApp.ML.MLData
 
         // Угол прямого восхождения
         [LoadColumn(1)]
+        [NoColumn]
         public float alpha { get; set; }
 
         // Угол склонения
         [LoadColumn(2)]
+        [NoColumn]
         public float delta { get; set; }
 
         // УФ-фильтр в фотометрической системе
@@ -53,6 +55,7 @@ namespace SpaceApp.ML.MLData
 
         // Столбец камеры
         [LoadColumn(10)]
+        [NoColumn]
         public float cam_col { get; set; }
 
         // Идентификатор поля
@@ -75,14 +78,17 @@ namespace SpaceApp.ML.MLData
 
         // Идентификатор пластины спектрометра в SDSS
         [LoadColumn(15)]
+        [NoColumn]
         public float plate { get; set; }
 
         // Модифицированная дата по юлианскому календарю
         [LoadColumn(16)]
+        [NoColumn]
         public float MJD { get; set; }
 
         // Идентификатор волокна, направляющего свет в фокальную плоскость
         [LoadColumn(17)]
+        [NoColumn]
         public float fiber_ID { get; set; }
     }
 }

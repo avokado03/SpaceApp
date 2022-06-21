@@ -21,7 +21,7 @@ namespace SpaceApp.ML.Services
         public MetricsViewModel Evaluate(ITransformer trainedModel, DataViewSchema schema)
         {
             var testDataPath = DataPathes.GetTestDataPath();
-            var testDataView = Context.Data.LoadFromTextFile<StellarData>(testDataPath, hasHeader: true);
+            var testDataView = Context.Data.LoadFromTextFile<StellarData>(testDataPath, hasHeader: true, separatorChar: Constants.CSV_SEPARATOR);
             var testMetrics = Context.MulticlassClassification.Evaluate(trainedModel.Transform(testDataView));
             return new MetricsMapper().Map(testMetrics);
         }

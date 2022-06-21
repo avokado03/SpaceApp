@@ -20,15 +20,15 @@ namespace SpaceApp.ML.Services
         /// <summary>
         /// Создает механизм прогнозирования для модели
         /// </summary>
-        public PredictionEngine<StellarData, IssuePrediction> GetPredictionEngine(ITransformer trainedModel)
+        public PredictionEngine<StellarData, StellarPrediction> GetPredictionEngine(ITransformer trainedModel)
         {
-            return Context.Model.CreatePredictionEngine<StellarData, IssuePrediction>(trainedModel);
+            return Context.Model.CreatePredictionEngine<StellarData, StellarPrediction>(trainedModel);
         }
 
         /// <summary>
         /// Возвращает одиночный прогноз
         /// </summary>
-        public IssuePrediction Predict(PredictionEngine<StellarData, IssuePrediction> predEngine, 
+        public StellarPrediction Predict(PredictionEngine<StellarData, StellarPrediction> predEngine, 
             StellarDataViewModel stellarModel)
         {
             var data = new StellarViewModelMapper().Map(stellarModel);
@@ -39,7 +39,7 @@ namespace SpaceApp.ML.Services
         /// <summary>
         /// Прогноз на основе модели из файла
         /// </summary>
-        public IssuePrediction PredictIssue(StellarDataViewModel stellarModel, PredictionEngine<StellarData, IssuePrediction> predEngine)
+        public StellarPrediction PredictIssue(StellarDataViewModel stellarModel, PredictionEngine<StellarData, StellarPrediction> predEngine)
         {
             ITransformer loadedModel = _fileService.LoadModelFromFile();
             return Predict(predEngine,stellarModel);

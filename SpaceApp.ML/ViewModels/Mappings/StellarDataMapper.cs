@@ -10,18 +10,12 @@ namespace SpaceApp.ML.ViewModels.Mappings
         {
             var vm = new StellarDataViewModel()
             {
-                alpha = input.alpha,
-                delta = input.delta,
                 u = input.u,
                 g = input.g,
                 r = input.r,
                 i = input.i,
                 z = input.z,
-                cam_col = input.cam_col,
-                redshift = input.redshift,
-                plate = input.plate,
-                MJD = input.MJD,
-                fiber_ID = input.fiber_ID
+                redshift = input.redshift
             };
             return vm;
         }

@@ -16,5 +16,7 @@
         public const char CSV_SEPARATOR = ',';
 
         public const string ENCODED_POSTFIX = "Encoded";
+
+        public const float DEFAULT_FLOAT = 0f;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace SpaceApp.ML.Utils
@@ -13,18 +14,18 @@ namespace SpaceApp.ML.Utils
         /// Путь к обучающему набору
         /// </summary>
         public static string GetDataPath() => 
-            Path.Combine(Assembly.GetExecutingAssembly().Location, "Data", "data.csv");
+            Path.Combine(Environment.CurrentDirectory, "Data", "data.csv");
 
         /// <summary>
         /// Путь к тестовому набору
         /// </summary>
         public static string GetTestDataPath() => 
-            Path.Combine(Assembly.GetExecutingAssembly().Location, "Data", "test.csv");
+            Path.Combine(Environment.CurrentDirectory, "Data", "test.csv");
 
         /// <summary>
         /// Путь к файлу модели
         /// </summary>
         public static string GetModelPath() => 
-            Path.Combine(Assembly.GetExecutingAssembly().Location, "Models", "model.zip");
+            Path.Combine(Environment.CurrentDirectory, "Models", "model.zip");
     }
 }

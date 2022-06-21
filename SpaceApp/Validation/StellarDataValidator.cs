@@ -22,12 +22,6 @@ namespace SpaceApp.Validation
                 //Интервалы взяты из: https://www.kaggle.com/code/psycon/stars-galaxies-eda-and-classification/data
                 switch (columnName)
                 {
-                    case nameof(alpha):
-                        Error = SetErrorMessage(alpha, 0.01f, 360f);
-                        break;
-                    case nameof(delta):
-                        Error = SetErrorMessage(delta, -18.8f, 83f);
-                        break;
                     case nameof(u):
                         Error = SetErrorMessage(u, -10000f, 32.8f);
                         break;
@@ -43,20 +37,8 @@ namespace SpaceApp.Validation
                     case nameof(z):
                         Error = SetErrorMessage(z, -10000f, 29.4f);
                         break;
-                    case nameof(cam_col):
-                        Error = SetErrorMessage(cam_col, 1f, 6f);
-                        break;
                     case nameof(redshift):
                         Error = SetErrorMessage(redshift, -0.01f, 7.01f);
-                        break;
-                    case nameof(plate):
-                        Error = SetErrorMessage(plate, 266f, 12500f);
-                        break;
-                    case nameof(MJD):
-                        Error = SetErrorMessage(MJD, 51600f, 58900f);
-                        break;
-                    case nameof(fiber_ID):
-                        Error = SetErrorMessage(fiber_ID, 1f, 1000f);
                         break;
                     default:
                         break;

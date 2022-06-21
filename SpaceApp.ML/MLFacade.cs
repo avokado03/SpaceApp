@@ -12,7 +12,7 @@ namespace SpaceApp.ML
     public class MLFacade
     {
         private MLContext _mlContext;
-        private PredictionEngine<StellarData,IssuePrediction> _predEngine;
+        private PredictionEngine<StellarData,StellarPrediction> _predEngine;
         private ITransformer _trainedModel;
         private IDataView _trainingDataView;
 
@@ -29,6 +29,7 @@ namespace SpaceApp.ML
             _fileService = new FileService(_mlContext);
             _predicionService = new PredictionService(_fileService, _mlContext);
             _evaluateService = new EvaluateService(_mlContext);
+            _trainingDataView = _fileService.LoadDataFromFile();
         }
 
         /// <summary>
@@ -41,9 +42,9 @@ namespace SpaceApp.ML
                 var trained = _tranerService.Train(_trainingDataView);
                 _trainedModel = trained;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                Console.WriteLine("Потом придумаю, че тут делать \n" + ex.Message);
+                throw;
             }          
         }
 
@@ -57,12 +58,12 @@ namespace SpaceApp.ML
             {
                 _predEngine = _predicionService.GetPredictionEngine(_trainedModel);
                 var issue = _predicionService.Predict(_predEngine, viewModel);
-                predict = issue.Class;
+                predict = issue.s_class;
             }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Потом придумаю, че тут делать \n" + ex.Message);
+            catch(Exception)
+            {                
                 predict = "???";
+                throw;
             }
             return predict;
         }
@@ -79,9 +80,9 @@ namespace SpaceApp.ML
                 var model = _evaluateService.Evaluate(_trainedModel, _trainingDataView.Schema);
                 metrics = model;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Потом придумаю, че тут делать \n" + ex.Message);
+                throw;
             }
             return metrics;
         }
@@ -91,7 +92,14 @@ namespace SpaceApp.ML
         /// </summary>
         public void SaveTrainedModel()
         {
-            _fileService.ModelToFile(_trainingDataView.Schema, _trainedModel);
+            try
+            {
+                _fileService.ModelToFile(_trainingDataView.Schema, _trainedModel);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -99,7 +107,14 @@ namespace SpaceApp.ML
         /// </summary>
         public void LoadModelFromFile()
         {
-            _fileService.LoadModelFromFile();
+            try
+            {
+                _fileService.LoadModelFromFile();
+            }
+            catch(Exception) 
+            {
+                throw;
+            }
         }
     }
 }

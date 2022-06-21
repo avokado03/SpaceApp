@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceApp", "SpaceApp\SpaceA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceApp.ML", "SpaceApp.ML\SpaceApp.ML.csproj", "{40FDB347-532B-4925-9128-1FE74BC5F4E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceApp.Terminal", "SpaceApp.Terminal\SpaceApp.Terminal.csproj", "{1C601D70-DDEE-4026-AC4B-5873BD473912}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{40FDB347-532B-4925-9128-1FE74BC5F4E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40FDB347-532B-4925-9128-1FE74BC5F4E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40FDB347-532B-4925-9128-1FE74BC5F4E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C601D70-DDEE-4026-AC4B-5873BD473912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C601D70-DDEE-4026-AC4B-5873BD473912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C601D70-DDEE-4026-AC4B-5873BD473912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C601D70-DDEE-4026-AC4B-5873BD473912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

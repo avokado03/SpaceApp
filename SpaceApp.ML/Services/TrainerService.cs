@@ -1,8 +1,10 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using SpaceApp.ML.MLData;
 using SpaceApp.ML.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SpaceApp.ML.Services
@@ -21,19 +23,17 @@ namespace SpaceApp.ML.Services
         /// </summary>
         private IEstimator<ITransformer> PrepareData()
         {
-            var pipeline = Context.Transforms.Conversion.MapValueToKey(Constants.PREDICT_COLUMN_NAME, Constants.PREDICT_LABEL);
+            var pipeline = Context.Transforms.Conversion.MapValueToKey(Constants.PREDICT_LABEL, Constants.PREDICT_COLUMN_NAME);
             var dataProps = typeof(StellarData).GetProperties()
-                .Where(prop => !Attribute.IsDefined(prop, typeof(NoColumnAttribute))).ToArray();
-            string[] outputColumnsNames = new string[dataProps.Length];
+                .Where(prop => !Attribute.IsDefined(prop, typeof(NoColumnAttribute)) && prop.Name != Constants.PREDICT_COLUMN_NAME).ToArray();
+            List<string> outputColumnsNames = new List<string>();
             foreach (var prop in dataProps)
             {
-                EncodingEstimateBuilder model = new EncodingEstimateBuilder(prop.Name);
-                pipeline.Append(model.GetTextEstimator(Context));
-                outputColumnsNames.Append(model.OutputColumnName);
+                outputColumnsNames.Add(prop.Name);
             }
-            pipeline.Append(Context.Transforms.Concatenate(Constants.FEATURE_COLUMN_NAME, outputColumnsNames));
-            pipeline.AppendCacheCheckpoint(Context);
-            return pipeline;
+            return pipeline.Append(Context.Transforms.Concatenate(Constants.FEATURE_COLUMN_NAME, outputColumnsNames.ToArray()))
+                .AppendCacheCheckpoint(Context);
+
         }
 
         /// <summary>
@@ -43,8 +43,17 @@ namespace SpaceApp.ML.Services
         private IEstimator<ITransformer> GetTraningPipeline()
         {
             var preparedPipeline = PrepareData();
-            var traningPipeline = preparedPipeline.Append(Context.MulticlassClassification.Trainers.SdcaMaximumEntropy(Constants.PREDICT_LABEL, Constants.FEATURE_COLUMN_NAME))
-                                                  .Append(Context.Transforms.Conversion.MapValueToKey(Constants.PREDICT_LABEL_NAME));           
+
+            var options = new SdcaMaximumEntropyMulticlassTrainer.Options
+            {
+                ConvergenceTolerance = 0.05f,
+                MaximumNumberOfIterations = 5,
+                LabelColumnName = Constants.PREDICT_LABEL,
+                FeatureColumnName = Constants.FEATURE_COLUMN_NAME,
+                Shuffle = true
+            };
+            var traningPipeline = preparedPipeline.Append(Context.MulticlassClassification.Trainers.SdcaMaximumEntropy(options)
+                                                  .Append(Context.Transforms.Conversion.MapKeyToValue(Constants.PREDICT_LABEL_NAME)));           
             return traningPipeline;
         }
 
