@@ -1,7 +1,7 @@
 ﻿using Microsoft.ML;
 using SpaceApp.ML.MLData;
 using SpaceApp.ML.Utils;
-using System;
+using System.IO;
 
 namespace SpaceApp.ML.Services
 {
@@ -37,8 +37,20 @@ namespace SpaceApp.ML.Services
         /// </summary>
         public void ModelToFile(DataViewSchema schema, ITransformer model)
         {
-            var modelPath = DataPathes.GetModelPath();
-            Context.Model.Save(model, schema, modelPath);
+            try
+            {
+                var modelPath = DataPathes.GetModelPath();
+                string directoryName = Path.GetDirectoryName(modelPath);
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+                Context.Model.Save(model, schema, modelPath);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new System.Exception("",ex);
+            }
         }
     }
 }

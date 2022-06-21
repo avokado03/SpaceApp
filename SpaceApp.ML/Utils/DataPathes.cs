@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace SpaceApp.ML.Utils
@@ -10,22 +11,34 @@ namespace SpaceApp.ML.Utils
     // https://www.kaggle.com/datasets/fedesoriano/stellar-classification-dataset-sdss17
     public static class DataPathes
     {
+
+        public static string appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+
         /// <summary>
         /// Путь к обучающему набору
         /// </summary>
-        public static string GetDataPath() => 
+        public static string GetDataPath() =>
             Path.Combine(Environment.CurrentDirectory, "Data", "data.csv");
 
         /// <summary>
         /// Путь к тестовому набору
         /// </summary>
-        public static string GetTestDataPath() => 
+        public static string GetTestDataPath() =>
             Path.Combine(Environment.CurrentDirectory, "Data", "test.csv");
 
         /// <summary>
         /// Путь к файлу модели
         /// </summary>
-        public static string GetModelPath() => 
-            Path.Combine(Environment.CurrentDirectory, "Models", "model.zip");
+        public static string GetModelPath() 
+        {
+            //var assemblyName = Assembly.GetAssembly(typeof(DataPathes)).FullName;
+            //var bundleAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            //                 .First(x => x.FullName.Contains(assemblyName));
+            //var asmPath = bundleAssembly.Location;
+            //var modelPath = Path.Combine(Path.GetDirectoryName(asmPath), "Models", "model.zip");
+            //return modelPath;
+
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SpaceApp", "model.zip");
+        }
     }
 }
