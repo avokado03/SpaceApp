@@ -11,7 +11,7 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="18"       
         FontFamily="{MaterialDesign:MaterialDesignFont}"
-        Title="SpaceApp" Height="Auto" Width="Auto">
+        Title="SpaceApp" SizeToContent="Height" Height="Auto" Width="Auto">
     <Window.Resources>
         <ControlTemplate x:Key="validationFailed">
             <StackPanel Orientation="Horizontal">
@@ -30,45 +30,24 @@
         </Style>
     </Window.Resources>
     <Grid x:Name="MainGrid" Margin="0 0 10 0">
-        
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2">
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button x:Name="LearnBtn" 
-                    Grid.Row="0" 
-                    Grid.Column="0" 
-                    Grid.ColumnSpan="2" 
-                    Margin="5px" 
-                    Background="{StaticResource PrimaryHueLightBrush}" 
-                    Foreground="Black"
-                    Command="{x:Static local:MainWindow.TrainModelCmd}">
-                Обучить модель
-                <Button.CommandBindings>
-                    <CommandBinding 
-                        Command="{x:Static local:MainWindow.TrainModelCmd}"
-                        Executed="TrainModelCmdExecuted"
-                        CanExecute="ButtonCanExecute"></CommandBinding>
-                </Button.CommandBindings>
-            </Button>
             <Button x:Name="LoadBtn" 
-                    Grid.Row="1"
+                    Grid.Row="0"
                     Grid.Column="0" 
                     Margin="5px" 
                     Background="{StaticResource SecondaryHueMidBrush}" 
@@ -82,25 +61,9 @@
                         CanExecute="ButtonCanExecute"></CommandBinding>
                 </Button.CommandBindings>
             </Button>
-            <Button x:Name="SaveBtn" 
-                    Grid.Row="1" 
-                    Grid.Column="1"
-                    Margin="5px" 
-                    Background="{StaticResource SecondaryHueMidBrush}" 
-                    Foreground="Black"
-                    Command="{x:Static local:MainWindow.SaveModelCmd}">
-                Сохранить модель в файл
-                <Button.CommandBindings>
-                    <CommandBinding 
-                        Command="{x:Static local:MainWindow.SaveModelCmd}"
-                        Executed="SaveModelCmdExecuted"
-                        CanExecute="ButtonCanExecute"></CommandBinding>
-                </Button.CommandBindings>
-            </Button>
             <Button x:Name="EvaluateBtn" 
-                    Grid.Row="2" 
+                    Grid.Row="1" 
                     Grid.Column="0" 
-                    Grid.ColumnSpan="2" 
                     Margin="5"
                     Background="{StaticResource PrimaryHueLightBrush}" 
                     Foreground="Black"
@@ -114,7 +77,7 @@
                 </Button.CommandBindings>
             </Button>
         </Grid>
-        <Grid x:Name="OutputGrid" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5">
+        <Grid x:Name="OutputGrid" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="300"/>
                 <RowDefinition Height="Auto"/>
@@ -124,7 +87,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Foreground="White" Background="#2b2a2a" Style="{StaticResource MaterialDesignScrollViewer}" VerticalScrollBarVisibility="Visible">
-                <TextBox x:Name="OutputTxt" IsReadOnly="True" Margin ="5" Cursor="Arrow"></TextBox>
+                <TextBox x:Name="OutputTxt" IsReadOnly="True" Margin ="5" Cursor="Arrow" HorizontalScrollBarVisibility="Visible"></TextBox>
             </ScrollViewer>
             <Button x:Name="ClearBtn" 
                     Grid.Row="1" 
@@ -142,11 +105,8 @@
                 </Button.CommandBindings>
             </Button>
         </Grid>
-        <Grid x:Name="FormGrid" Margin="5" Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Background="PowderBlue" Cursor="Arrow">
+        <Grid x:Name="FormGrid" Margin="5" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="PowderBlue" Cursor="Arrow">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -166,29 +126,6 @@
             
             <TextBlock Margin="5" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Введите данные спектрального анализа:</TextBlock>
 
-            <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13" Grid.Row="1" Grid.Column="0">Угол прямого восхождения</Label>
-            <TextBox x:Name="AlphaTb" Grid.Row="1" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
-                     Validation.ErrorTemplate="{StaticResource validationFailed}">
-                <TextBox.Text>
-                    <Binding Path="alpha" NotifyOnValidationError="True">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-
-            <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13"  Grid.Row="2" Grid.Column="0">Угол склонения</Label>
-            <TextBox x:Name="DeltaTb" Grid.Row="2" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
-                     Validation.ErrorTemplate="{StaticResource validationFailed}">
-                <TextBox.Text>
-                    <Binding Path="delta" NotifyOnValidationError="True">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
 
             <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13"  Grid.Row="3" Grid.Column="0">УФ-фильтр в фотометрической системе</Label>
             <TextBox x:Name="UTb" Grid.Row="3" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
@@ -250,59 +187,11 @@
                 </TextBox.Text>
             </TextBox>
 
-            <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13"  Grid.Row="8" Grid.Column="0">Столбец камеры</Label>
-            <TextBox x:Name="CameraColTb" Grid.Row="8" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
-                     Validation.ErrorTemplate="{StaticResource validationFailed}">
-                <TextBox.Text>
-                    <Binding Path="cam_col" NotifyOnValidationError="True">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-
             <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13" Grid.Row="9" Grid.Column="0">Значение красного смещения</Label>
             <TextBox x:Name="RedshiftTb" Grid.Row="9" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
                      Validation.ErrorTemplate="{StaticResource validationFailed}">
                 <TextBox.Text>
                     <Binding Path="redshift" NotifyOnValidationError="True">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-
-            <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13"  Grid.Row="10" Grid.Column="0">Идентификатор пластины спектрометра в SDSS</Label>
-            <TextBox x:Name="PlateTb" Grid.Row="10" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
-                     Validation.ErrorTemplate="{StaticResource validationFailed}">
-                <TextBox.Text>
-                    <Binding Path="plate" NotifyOnValidationError="True">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-
-            <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13"  Grid.Row="11" Grid.Column="0">Модифицированная дата по юлианскому календарю</Label>
-            <TextBox x:Name="MJDTb" Grid.Row="11" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
-                     Validation.ErrorTemplate="{StaticResource validationFailed}">
-                <TextBox.Text>
-                    <Binding Path="MJD" NotifyOnValidationError="True">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-
-            <Label Margin="5 0 0 0" HorizontalAlignment="Right" FontSize="13"  Grid.Row="12" Grid.Column="0">Идентификатор волокна, направляющего свет в фокальную плоскость</Label>
-            <TextBox x:Name="FiberIdTb" Grid.Row="12" Grid.Column="1" Validation.Error="TextBox_Error" Style="{StaticResource textBoxInError}"
-                     Validation.ErrorTemplate="{StaticResource validationFailed}">
-                <TextBox.Text>
-                    <Binding Path="fiber_ID" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
                             <DataErrorValidationRule />
                         </Binding.ValidationRules>
