@@ -50,7 +50,8 @@ namespace SpaceApp.ML.Services
                 MaximumNumberOfIterations = iterations,
                 LabelColumnName = Constants.PREDICT_LABEL,
                 FeatureColumnName = Constants.FEATURE_COLUMN_NAME,
-                Shuffle = true
+                Shuffle = true,
+                L1Regularization = 0.15f
             };
             var traningPipeline = preparedPipeline.Append(Context.MulticlassClassification.Trainers.SdcaMaximumEntropy(options)
                                                   .Append(Context.Transforms.Conversion.MapKeyToValue(Constants.PREDICT_LABEL_NAME)));           
