@@ -87,7 +87,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Foreground="White" Background="#2b2a2a" Style="{StaticResource MaterialDesignScrollViewer}" VerticalScrollBarVisibility="Visible">
-                <TextBox x:Name="OutputTxt" IsReadOnly="True" Margin ="5" Cursor="Arrow" HorizontalScrollBarVisibility="Visible"></TextBox>
+                <TextBox x:Name="OutputTxt" FontSize="14" IsReadOnly="True" Margin ="5" Cursor="Arrow" HorizontalScrollBarVisibility="Visible"></TextBox>
             </ScrollViewer>
             <Button x:Name="ClearBtn" 
                     Grid.Row="1" 

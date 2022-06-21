@@ -2,6 +2,7 @@
 using SpaceApp.ML.MLData;
 using SpaceApp.ML.ViewModels;
 using SpaceApp.ML.ViewModels.Mappings;
+using System;
 
 namespace SpaceApp.ML.Services
 {
@@ -22,7 +23,14 @@ namespace SpaceApp.ML.Services
         /// </summary>
         public PredictionEngine<StellarData, StellarPrediction> GetPredictionEngine(ITransformer trainedModel)
         {
-            return Context.Model.CreatePredictionEngine<StellarData, StellarPrediction>(trainedModel);
+            try
+            {
+                return Context.Model.CreatePredictionEngine<StellarData, StellarPrediction>(trainedModel);
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new Exception("Сначала сформируйте модель и загрузите ее!\n", ex);
+            }
         }
 
         /// <summary>
@@ -31,9 +39,18 @@ namespace SpaceApp.ML.Services
         public StellarPrediction Predict(PredictionEngine<StellarData, StellarPrediction> predEngine, 
             StellarDataViewModel stellarModel)
         {
-            var data = new StellarViewModelMapper().Map(stellarModel);
-            var prediction = predEngine.Predict(data);
-            return prediction;
+            try
+            {
+                if (predEngine is null || stellarModel is null)
+                    throw new ArgumentNullException();
+                var data = new StellarViewModelMapper().Map(stellarModel);
+                var prediction = predEngine.Predict(data);
+                return prediction;
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new Exception("Ошибка. Проверьте введенные данные. \n", ex);
+            }
         }
 
         /// <summary>

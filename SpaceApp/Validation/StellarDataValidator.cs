@@ -57,5 +57,14 @@ namespace SpaceApp.Validation
                 : string.Empty;
         };
 
+        public bool ZeroOrEmpty()
+        {
+            bool result = true;
+            foreach(var f in typeof(StellarDataViewModel).GetProperties()){
+                result = (Convert.ToSingle(f.GetValue(this)) == 0f) && result;
+            }
+            return result;
+        }
+
     }
 }

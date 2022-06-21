@@ -53,19 +53,16 @@ namespace SpaceApp.ML
         /// </summary>
         public string Predict(StellarDataViewModel viewModel)
         {
-            string predict = string.Empty;
             try
             {
                 _predEngine = _predicionService.GetPredictionEngine(_trainedModel);
                 var issue = _predicionService.Predict(_predEngine, viewModel);
-                predict = issue.s_class;
+                return issue.s_class;
             }
-            catch(Exception)
+            catch(Exception ex)
             {                
-                predict = "???";
-                throw;
+                throw new Exception(ex.Message, ex);
             }
-            return predict;
         }
 
 
@@ -74,17 +71,17 @@ namespace SpaceApp.ML
         /// </summary>
         public MetricsViewModel Evaluate()
         {
-            MetricsViewModel metrics = new MetricsViewModel();
+            //MetricsViewModel metrics = new MetricsViewModel();
             try
             {
-                var model = _evaluateService.Evaluate(_trainedModel, _trainingDataView.Schema);
-                metrics = model;
+                return _evaluateService.Evaluate(_trainedModel, _trainingDataView.Schema);
+                //metrics = model;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message, ex);
             }
-            return metrics;
+            //return metrics;
         }
 
         /// <summary>
@@ -109,7 +106,7 @@ namespace SpaceApp.ML
         {
             try
             {
-                _fileService.LoadModelFromFile();
+               _trainedModel = _fileService.LoadModelFromFile();
             }
             catch(Exception) 
             {

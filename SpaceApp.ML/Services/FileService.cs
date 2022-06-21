@@ -1,6 +1,7 @@
 ﻿using Microsoft.ML;
 using SpaceApp.ML.MLData;
 using SpaceApp.ML.Utils;
+using System;
 using System.IO;
 
 namespace SpaceApp.ML.Services
@@ -18,9 +19,19 @@ namespace SpaceApp.ML.Services
         /// Загрузка модели из файла
         /// </summary>
         public ITransformer LoadModelFromFile() {
-            ITransformer loadedModel = Context.Model
-                .Load(DataPathes.GetModelPath(), out var modelInputSchema);
-            return loadedModel;
+            string path = string.Empty;
+            try
+            {
+                path = DataPathes.GetModelPath();
+                ITransformer loadedModel = Context.Model
+                    .Load(path, out var modelInputSchema);
+                return loadedModel;
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new Exception("Файл модели не найден по адресу: " + path 
+                    + ",\nсначала обучите и сохраните модель.", ex);
+            }
         }
 
         /// <summary>

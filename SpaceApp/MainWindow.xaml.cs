@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Reflection;
-using SpaceApp.ML.ViewModels;
 using SpaceApp.Validation;
 
 namespace SpaceApp
@@ -29,11 +19,10 @@ namespace SpaceApp
         {           
             ClearConsoleCmd = new RoutedCommand("ClearConsoleCmd", typeof(Button));          
             ClearStellarFormCmd = new RoutedCommand("ClearStellarFormCmd", typeof(Button));
-            TrainModelCmd = new RoutedCommand("TrainModelCmd", typeof(Button));
-            LoadModelCmd = new RoutedCommand("LoadModelCmd", typeof(Button));
-            SaveModelCmd = new RoutedCommand("SaveModelCmd", typeof(Button));
+            LoadModelCmd = new RoutedCommand("LoadModelCmd", typeof(Button));          
             EvaluateCmd = new RoutedCommand("EvaluateCmd", typeof(Button));
             PredictCmd = new RoutedCommand("PredictCmd", typeof(Button));
+
             _stellarDataValidator = new StellarDataValidator();           
             DataContext = _stellarDataValidator;
             _ml = new ML.MLFacade();
@@ -57,28 +46,12 @@ namespace SpaceApp
         }
         #endregion
 
-        #region Обучить
-        public static RoutedCommand TrainModelCmd;
-        private void TrainModelCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            RunMLAction(_ml.Train);
-        }
-
-        #endregion
-
         #region Загрузить
         public static RoutedCommand LoadModelCmd;
         private void LoadModelCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             RunMLAction(_ml.LoadModelFromFile);
-        }
-        #endregion
-
-        #region Сохранить
-        public static RoutedCommand SaveModelCmd;
-        private void SaveModelCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            RunMLAction(_ml.SaveTrainedModel);
+            OutputTxt.Text += "Загрузка модели завершена успешно \n\r";
         }
         #endregion
 
@@ -86,8 +59,20 @@ namespace SpaceApp
         public static RoutedCommand EvaluateCmd;
         private void EvaluateCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            RunMLAction(Evaluate);
+        }
+
+        private void Evaluate()
+        {
             var result = _ml.Evaluate();
-            string m = string.Format("{0} - {1} - {2} - {3} \n\r", result.MicroAccuracy, result.MacroAccuracy, result.LogLoss, result.LogLossReduction);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("Метрики для текущей модели: \n");
+            builder.Append(string.Format("Микроточность : {0} \n", result.MicroAccuracy));
+            builder.Append(string.Format("Мaкроточность : {0} \n", result.MacroAccuracy));
+            builder.Append(string.Format("Логарифмические потери: {0} \n", result.LogLoss));
+            builder.Append(string.Format("Минимизация логарифмических потерь : {0} \n", result.LogLossReduction));
+            string output = builder.ToString();
+            OutputTxt.Text += output;
         }
         #endregion
 
@@ -95,8 +80,16 @@ namespace SpaceApp
         public static RoutedCommand PredictCmd;
         private void PredictCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            RunMLAction(Predict);
+        }
+
+        private void Predict()
+        {
+            if (_stellarDataValidator.ZeroOrEmpty())
+                throw new Exception("Введите валидные данные \n");
             var result = _ml.Predict(_stellarDataValidator);
-            string m = string.Format("Class - {0} \n\r", result);
+            string output = string.Format("Класс небесного тела - {0} \n", result);
+            OutputTxt.Text += output;
         }
         #endregion
 
@@ -107,7 +100,7 @@ namespace SpaceApp
 
         private void TextBox_Error(object sender, ValidationErrorEventArgs e)
         {
-            var errorEventMsg = e.Error.ErrorContent.ToString() + "\n\r";
+            var errorEventMsg = e.Error.ErrorContent.ToString() + "\n";
             OutputTxt.Text += errorEventMsg;
         }
 
