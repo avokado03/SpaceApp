@@ -44,7 +44,7 @@ namespace SpaceApp.Terminal
         }
 
         /// <summary>
-        /// Ввод кол-ва эпох
+        /// Ввод кол-ва итераций
         /// </summary>
         private static int SetIterations()
         {
