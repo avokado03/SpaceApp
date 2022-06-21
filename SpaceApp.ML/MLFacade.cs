@@ -62,7 +62,6 @@ namespace SpaceApp.ML
             }
             catch(Exception)
             {                
-                predict = "???";
                 throw;
             }
             return predict;
@@ -109,7 +108,7 @@ namespace SpaceApp.ML
         {
             try
             {
-                _fileService.LoadModelFromFile();
+               _trainedModel = _fileService.LoadModelFromFile();
             }
             catch(Exception) 
             {
