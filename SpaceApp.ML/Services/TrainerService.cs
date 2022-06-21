@@ -40,14 +40,14 @@ namespace SpaceApp.ML.Services
         /// Назначение алгоритма обучения
         /// </summary>
         /// <param name="mlContext">Контекст выполнения</param>
-        private IEstimator<ITransformer> GetTraningPipeline()
+        private IEstimator<ITransformer> GetTraningPipeline(int iterations)
         {
             var preparedPipeline = PrepareData();
 
             var options = new SdcaMaximumEntropyMulticlassTrainer.Options
             {
                 ConvergenceTolerance = 0.05f,
-                MaximumNumberOfIterations = 5,
+                MaximumNumberOfIterations = iterations,
                 LabelColumnName = Constants.PREDICT_LABEL,
                 FeatureColumnName = Constants.FEATURE_COLUMN_NAME,
                 Shuffle = true
@@ -60,9 +60,9 @@ namespace SpaceApp.ML.Services
         /// <summary>
         /// Тренирует модель
         /// </summary>
-        public ITransformer Train(IDataView dataView)
+        public ITransformer Train(IDataView dataView, int iterations)
         {
-            var pipeline = GetTraningPipeline();
+            var pipeline = GetTraningPipeline(iterations);
             return pipeline.Fit(dataView);
         }
 

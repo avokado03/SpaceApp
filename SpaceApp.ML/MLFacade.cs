@@ -35,11 +35,11 @@ namespace SpaceApp.ML
         /// <summary>
         /// Обучение
         /// </summary>
-        public void Train()
+        public void Train(int iterations)
         {
             try
             {
-                var trained = _tranerService.Train(_trainingDataView);
+                var trained = _tranerService.Train(_trainingDataView, iterations);
                 _trainedModel = trained;
             }
             catch(Exception)
@@ -53,16 +53,19 @@ namespace SpaceApp.ML
         /// </summary>
         public string Predict(StellarDataViewModel viewModel)
         {
+            string predict = string.Empty;
             try
             {
                 _predEngine = _predicionService.GetPredictionEngine(_trainedModel);
                 var issue = _predicionService.Predict(_predEngine, viewModel);
-                return issue.s_class;
+                predict = issue.s_class;
             }
-            catch(Exception ex)
+            catch(Exception)
             {                
-                throw new Exception(ex.Message, ex);
+                predict = "???";
+                throw;
             }
+            return predict;
         }
 
 
@@ -71,17 +74,17 @@ namespace SpaceApp.ML
         /// </summary>
         public MetricsViewModel Evaluate()
         {
-            //MetricsViewModel metrics = new MetricsViewModel();
+            MetricsViewModel metrics = new MetricsViewModel();
             try
             {
-                return _evaluateService.Evaluate(_trainedModel, _trainingDataView.Schema);
-                //metrics = model;
+                var model = _evaluateService.Evaluate(_trainedModel, _trainingDataView.Schema);
+                metrics = model;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message, ex);
+                throw;
             }
-            //return metrics;
+            return metrics;
         }
 
         /// <summary>
@@ -106,7 +109,7 @@ namespace SpaceApp.ML
         {
             try
             {
-               _trainedModel = _fileService.LoadModelFromFile();
+                _fileService.LoadModelFromFile();
             }
             catch(Exception) 
             {

@@ -8,9 +8,12 @@ namespace SpaceApp.Terminal
         static void Main(string[] args)
         {
             MLFacade ml = new MLFacade();
+
+            int iterations = SetIterations();
+
             //train
             Console.WriteLine("=== Start training === \n\r");
-            ml.Train();
+            ml.Train(iterations);
             Console.WriteLine("=== Training is over! ===\n\r");
             //evaluate
             Console.WriteLine("=== Let's evaluate! === \n\r");
@@ -18,7 +21,7 @@ namespace SpaceApp.Terminal
             Console.WriteLine("=== Metrics ===");
             Console.WriteLine(string.Format(" === MicroAccuracy: {0} (ideal: 1) ===", metrics.MicroAccuracy));
             Console.WriteLine(string.Format(" === MacroAccuracy: {0} (ideal: 1) ===", metrics.MacroAccuracy));
-            Console.WriteLine(string.Format(" === LogLoss: {0} (ideal: 0) ===", metrics.LogLossReduction));
+            Console.WriteLine(string.Format(" === LogLoss: {0} (ideal: 0) ===", metrics.LogLoss));
             Console.WriteLine(string.Format(" === LogLossReduction: {0} (ideal: 1) ===", metrics.LogLossReduction));
             //predict
             var p = ml.Predict(new ML.ViewModels.StellarDataViewModel
@@ -35,6 +38,23 @@ namespace SpaceApp.Terminal
 
             //save
             ml.SaveTrainedModel();
+        }
+
+        /// <summary>
+        /// Ввод кол-ва эпох
+        /// </summary>
+        private static int SetIterations()
+        {
+            try
+            {
+                Console.WriteLine("Set numbers of iterations: ");
+                return Convert.ToInt32(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Wrong number, try again...");
+                return SetIterations();
+            }
         }
     }
 }
