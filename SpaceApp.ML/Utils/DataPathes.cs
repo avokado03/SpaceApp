@@ -31,13 +31,6 @@ namespace SpaceApp.ML.Utils
         /// </summary>
         public static string GetModelPath() 
         {
-            //var assemblyName = Assembly.GetAssembly(typeof(DataPathes)).FullName;
-            //var bundleAssembly = AppDomain.CurrentDomain.GetAssemblies()
-            //                 .First(x => x.FullName.Contains(assemblyName));
-            //var asmPath = bundleAssembly.Location;
-            //var modelPath = Path.Combine(Path.GetDirectoryName(asmPath), "Models", "model.zip");
-            //return modelPath;
-
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SpaceApp", "model.zip");
         }
     }

@@ -37,20 +37,13 @@ namespace SpaceApp.ML.Services
         /// </summary>
         public void ModelToFile(DataViewSchema schema, ITransformer model)
         {
-            try
+            var modelPath = DataPathes.GetModelPath();
+            string directoryName = Path.GetDirectoryName(modelPath);
+            if (!Directory.Exists(directoryName))
             {
-                var modelPath = DataPathes.GetModelPath();
-                string directoryName = Path.GetDirectoryName(modelPath);
-                if (!Directory.Exists(directoryName))
-                {
-                    Directory.CreateDirectory(directoryName);
-                }
-                Context.Model.Save(model, schema, modelPath);
+                Directory.CreateDirectory(directoryName);
             }
-            catch (DirectoryNotFoundException ex)
-            {
-                throw new System.Exception("",ex);
-            }
+            Context.Model.Save(model, schema, modelPath);
         }
     }
 }
